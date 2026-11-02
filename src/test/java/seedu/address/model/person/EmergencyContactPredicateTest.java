@@ -25,8 +25,7 @@ public class EmergencyContactPredicateTest {
         assertFalse(predicate.test(new PersonBuilder().build()));
         assertFalse(predicate.test(new PersonBuilder().withTags("staff", "resident").build()));
         assertFalse(predicate.test(new PersonBuilder().withTags("emerg", "emergencyservice").build()));
-        assertFalse(predicate.test(new PersonBuilder().withName("Emergency")
-                .withEmail("emergency@example.com").withAddress("Emergency Road").build()));
+        assertFalse(predicate.test(new PersonBuilder().withName("Emergency").build()));
     }
 
     @Test

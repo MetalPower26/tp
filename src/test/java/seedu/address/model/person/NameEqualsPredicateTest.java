@@ -63,8 +63,7 @@ public class NameEqualsPredicateTest {
 
         // Matches phone, email and address, but not name
         predicate = new NameEqualsPredicate("12345");
-        assertFalse(predicate.test(new PersonBuilder().withName("Alice").withPhone("12345")
-                .withEmail("alice@email.com").withAddress("Main Street").build()));
+        assertFalse(predicate.test(new PersonBuilder().withName("Alice").withPhone("12345").build()));
     }
 
     @Test

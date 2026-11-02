@@ -192,8 +192,6 @@ public class EditCommandTest {
             Object expected = other == field ? newValue : other.getFrom(target);
             assertEquals(expected, other.getFrom(spy.editedPerson), "field " + other + " after editing " + field);
         }
-        assertEquals(target.getEmail(), spy.editedPerson.getEmail());
-        assertEquals(target.getAddress(), spy.editedPerson.getAddress());
         assertTrue(spy.editedPerson.isFavourite(), "favourite status after editing " + field);
     }
 

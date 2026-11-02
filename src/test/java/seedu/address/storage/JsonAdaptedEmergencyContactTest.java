@@ -70,7 +70,7 @@ public class JsonAdaptedEmergencyContactTest {
             new JsonAdaptedEmergencyContact("Bob", "91234567", "a".repeat(51))}) {
             assertThrows(IllegalValueException.class, invalid::toModelType);
             JsonAdaptedPerson person = new JsonAdaptedPerson(ALICE.getName().fullName, ALICE.getPhone().value,
-                    ALICE.getEmail().value, ALICE.getAddress().value, java.util.List.of(), "", "", invalid);
+                    java.util.List.of(), "", "", invalid);
             assertThrows(IllegalValueException.class, person::toModelType);
         }
     }

@@ -9,8 +9,6 @@ import java.util.stream.Collectors;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Email;
 
 /** Parses the add command: the name, followed by every other {@link PersonField} in any order. */
 public class AddCommandParser implements Parser<AddCommand> {
@@ -50,8 +48,7 @@ public class AddCommandParser implements Parser<AddCommand> {
             details.setDefaultIfAbsent(field);
         }
 
-        // Email and address remain legacy model fields until the edit workflow is redesigned.
-        return new AddCommand(details.toPerson(new Email(""), new Address("")));
+        return new AddCommand(details.toPerson());
     }
 
     /**

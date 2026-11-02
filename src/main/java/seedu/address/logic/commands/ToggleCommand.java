@@ -76,8 +76,7 @@ public class ToggleCommand extends Command {
 
         PersonFieldValues values = PersonFieldValues.of(personToEdit);
         values.set(PersonField.TAGS, toggledTags);
-        Person editedPerson = values.toPerson(personToEdit.getEmail(), personToEdit.getAddress(),
-                personToEdit.getEmergencyContact(), personToEdit.isFavourite());
+        Person editedPerson = values.toPerson(personToEdit.getEmergencyContact(), personToEdit.isFavourite());
 
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ACTIVE_PERSONS);

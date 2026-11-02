@@ -314,7 +314,7 @@ The following sequence diagram shows a successful `edit 1 /phone 91234567`, assu
 1. `EditCommandParser` asks an empty `EditPersonDescriptor` to `setIfGiven()` each field in `PersonField.editableValues()`. The descriptor passes each field to its `PersonFieldValues#setIfGiven(field, args, true)`, which calls `PersonField#parseFrom(args, true)`. That returns an `Optional`, empty for a field that was not given, so only `/phone` is stored. The `true` allows an optional field given with no value, such as `/room`, to be cleared.
 2. `EditCommand` takes the contact at the index from `Model#getFilteredPersonList()`.
 3. `PersonFieldValues.of()` copies the contact's name, phone, room, note and tags, and `putAll()` overwrites only the phone.
-4. The email, address, emergency contact and favourite status are not fields, so `EditCommand` passes them from the original contact to `toPerson()`.
+4. The emergency contact and favourite status are not fields, so `EditCommand` passes them from the original contact to `toPerson()`.
 5. `Model#setPerson()` replaces the contact. The current filter and sorting stay applied, so the edited contact may disappear from the list or move, for example when its new name no longer matches the `find` that is showing.
 
 The diagram omits error paths (invalid input, an out-of-range index, an archived contact and a duplicate contact), the `AddressBookParser` routing, and saving by `LogicManager`.
@@ -834,7 +834,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* *` | user who has forgotten a command | view the usage format of one specific command | can type it correctly on the first try |
 | `* *` | user searching for a contact | search using only part of a name | can find someone without typing their full name |
 | `* *` | user searching for a contact | have my search ignore capitalisation | do not have to remember how the name was typed in |
-| `* *` | user | record an email address against a contact | can reach them through a more formal channel if needed |
 | `* *` | user whose contact details have changed | edit a single field of an existing contact | do not have to retype the whole entry to fix one thing |
 | `* *` | user whose residents' situations change | add or remove tags on an existing contact without retyping its other tags | can keep tags such as `emergency` up to date quickly |
 | `* *` | user | be warned when I add a contact whose name is already in use | do not end up with duplicate entries for one person |

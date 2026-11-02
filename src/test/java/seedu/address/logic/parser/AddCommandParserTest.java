@@ -45,7 +45,7 @@ public class AddCommandParserTest {
     public void parse_phoneCharacters_success() {
         assertParseSuccess(parser, "Daniel Lim /phone +65 (8123)-4567",
                 new AddCommand(new PersonBuilder().withName("Daniel Lim")
-                        .withPhone("+65 (8123)-4567").withEmail("").withAddress("").build()));
+                        .withPhone("+65 (8123)-4567").build()));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class AddCommandParserTest {
     public void parse_nameLength() {
         String longestName = "A".repeat(Name.MAX_LENGTH);
         assertParseSuccess(parser, longestName + " /phone " + VALID_PHONE, new AddCommand(new PersonBuilder()
-                .withName(longestName).withPhone(VALID_PHONE).withEmail("").withAddress("").build()));
+                .withName(longestName).withPhone(VALID_PHONE).build()));
         assertParseFailure(parser, longestName + "A /phone " + VALID_PHONE, Name.MESSAGE_TOO_LONG);
     }
 
@@ -79,7 +79,7 @@ public class AddCommandParserTest {
     public void parse_phoneAtMaxLength_success() {
         String longestPhone = "1".repeat(Phone.MAX_LENGTH);
         assertParseSuccess(parser, VALID_NAME + " /phone " + longestPhone, new AddCommand(new PersonBuilder()
-                .withName(VALID_NAME).withPhone(longestPhone).withEmail("").withAddress("").build()));
+                .withName(VALID_NAME).withPhone(longestPhone).build()));
     }
 
     @Test
@@ -274,6 +274,6 @@ public class AddCommandParserTest {
 
     /** Returns a builder for the person {@code add} creates from {@link #VALID_NAME_AND_PHONE} alone. */
     private static PersonBuilder validPersonBuilder() {
-        return new PersonBuilder().withName(VALID_NAME).withPhone(VALID_PHONE).withEmail("").withAddress("");
+        return new PersonBuilder().withName(VALID_NAME).withPhone(VALID_PHONE);
     }
 }

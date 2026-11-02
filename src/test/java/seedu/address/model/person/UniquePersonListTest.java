@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
@@ -46,7 +44,7 @@ public class UniquePersonListTest {
     @Test
     public void contains_personWithSameIdentityFieldsInList_returnsTrue() {
         uniquePersonList.add(ALICE);
-        Person editedAlice = new PersonBuilder(ALICE).withAddress(VALID_ADDRESS_BOB).withTags(VALID_TAG_HUSBAND)
+        Person editedAlice = new PersonBuilder(ALICE).withTags(VALID_TAG_HUSBAND)
                 .build();
         assertTrue(uniquePersonList.contains(editedAlice));
     }
@@ -89,7 +87,7 @@ public class UniquePersonListTest {
     @Test
     public void setPerson_editedPersonHasSameIdentity_success() {
         uniquePersonList.add(ALICE);
-        Person editedAlice = new PersonBuilder(ALICE).withAddress(VALID_ADDRESS_BOB).withTags(VALID_TAG_HUSBAND)
+        Person editedAlice = new PersonBuilder(ALICE).withTags(VALID_TAG_HUSBAND)
                 .build();
         uniquePersonList.setPerson(ALICE, editedAlice);
         UniquePersonList expectedUniquePersonList = new UniquePersonList();
@@ -191,16 +189,13 @@ public class UniquePersonListTest {
     public void setPerson_everyFieldChanged_replacesEveryField() {
         Person resident = new PersonBuilder(ALICE).withRoom("B-204").build();
         uniquePersonList.add(resident);
-        Person updated = new PersonBuilder().withName(VALID_NAME_BOB).withPhone(VALID_PHONE_BOB)
-                .withEmail(VALID_EMAIL_BOB).withAddress(VALID_ADDRESS_BOB).withRoom("C-101")
+        Person updated = new PersonBuilder().withName(VALID_NAME_BOB).withPhone(VALID_PHONE_BOB).withRoom("C-101")
                 .withTags(VALID_TAG_HUSBAND).build();
         uniquePersonList.setPerson(resident, updated);
 
         Person stored = uniquePersonList.asUnmodifiableObservableList().getFirst();
         assertEquals(VALID_NAME_BOB, stored.getName().fullName);
         assertEquals(VALID_PHONE_BOB, stored.getPhone().value);
-        assertEquals(VALID_EMAIL_BOB, stored.getEmail().value);
-        assertEquals(VALID_ADDRESS_BOB, stored.getAddress().value);
         assertEquals(new Room("C-101"), stored.getRoom());
         assertEquals(Set.of(new Tag(VALID_TAG_HUSBAND)), stored.getTags());
     }

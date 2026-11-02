@@ -163,8 +163,7 @@ public class JsonAddressBookStorageTest {
                   }]
                 }
                 """);
-        Person expected = new PersonBuilder().withName("Legacy Contact").withPhone("91234567")
-                .withEmail("legacy@example.com").withAddress("123 Legacy Road").withRoom("B-204")
+        Person expected = new PersonBuilder().withName("Legacy Contact").withPhone("91234567").withRoom("B-204")
                 .withNote("Call after 6 pm").withTags("Resident", "Floor 3").build();
 
         ReadOnlyAddressBook loaded = new JsonAddressBookStorage(path).readAddressBook().orElseThrow();

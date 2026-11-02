@@ -134,8 +134,8 @@ public class ToggleCommandTest {
         Person base = new PersonBuilder().withName("Zed").withTags("a").withNote("Prefers WhatsApp")
                 .withFavourite(true).build();
         EmergencyContact emergencyContact = new EmergencyContact(new Name("Bob Choo"), new Phone("91234567"), "Dad");
-        Person person = new Person(base.getName(), base.getPhone(), base.getEmail(), base.getAddress(),
-                base.getTags(), base.getRoom(), base.getNote(), Optional.of(emergencyContact), false, true);
+        Person person = new Person(base.getName(), base.getPhone(), base.getTags(), base.getRoom(), base.getNote(),
+            Optional.of(emergencyContact), false, true);
         model.addPerson(person);
         Index index = Index.fromOneBased(model.getFilteredPersonList().size());
 
@@ -151,8 +151,8 @@ public class ToggleCommandTest {
     @Test
     public void execute_archivedPerson_failure() {
         Person base = new PersonBuilder().withName("Zed").withTags("a").build();
-        Person archived = new Person(base.getName(), base.getPhone(), base.getEmail(), base.getAddress(),
-                base.getTags(), base.getRoom(), base.getNote(), Optional.empty(), true, false);
+        Person archived = new Person(base.getName(), base.getPhone(), base.getTags(), base.getRoom(), base.getNote(),
+            Optional.empty(), true, false);
         model.addPerson(archived);
         model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS);
         Index index = Index.fromOneBased(model.getFilteredPersonList().size());

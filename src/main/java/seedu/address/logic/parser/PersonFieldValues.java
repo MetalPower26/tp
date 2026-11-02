@@ -9,8 +9,6 @@ import java.util.Optional;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Email;
 import seedu.address.model.person.EmergencyContact;
 import seedu.address.model.person.Person;
 
@@ -85,22 +83,21 @@ public class PersonFieldValues {
 
     /**
      * Creates a person from these values, which must have a value for every field.
-     * The legacy {@code email} and {@code address}, which are not fields, are given separately.
      */
-    public Person toPerson(Email email, Address address) {
-        return toPerson(email, address, Optional.empty());
+    public Person toPerson() {
+        return toPerson(Optional.empty());
     }
 
     /** Creates a person while preserving emergency details managed outside the add/edit field registry. */
-    public Person toPerson(Email email, Address address, Optional<EmergencyContact> emergencyContact) {
-        return toPerson(email, address, emergencyContact, false);
+    public Person toPerson(Optional<EmergencyContact> emergencyContact) {
+        return toPerson(emergencyContact, false);
     }
 
     /** Creates an active person while preserving emergency details and favourite status. */
-    public Person toPerson(Email email, Address address, Optional<EmergencyContact> emergencyContact,
+    public Person toPerson(Optional<EmergencyContact> emergencyContact,
             boolean isFavourite) {
-        requireAllNonNull(email, address, emergencyContact);
-        return new Person(require(PersonField.NAME), require(PersonField.PHONE), email, address,
+        requireAllNonNull(emergencyContact);
+        return new Person(require(PersonField.NAME), require(PersonField.PHONE),
                 require(PersonField.TAGS), require(PersonField.ROOM), require(PersonField.NOTE), emergencyContact,
                 false, isFavourite);
     }

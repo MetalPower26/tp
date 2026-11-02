@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
-import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NOTE_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
@@ -28,12 +26,10 @@ public class PersonTest {
 
     @Test
     public void constructor_withoutFavouriteStatus_defaultsToFalse() {
-        assertFalse(new Person(ALICE.getName(), ALICE.getPhone(), ALICE.getEmail(), ALICE.getAddress(),
-                ALICE.getTags()).isFavourite());
-        assertFalse(new Person(ALICE.getName(), ALICE.getPhone(), ALICE.getEmail(), ALICE.getAddress(),
-                ALICE.getTags(), new Room("B-204")).isFavourite());
-        assertFalse(new Person(ALICE.getName(), ALICE.getPhone(), ALICE.getEmail(), ALICE.getAddress(),
-                ALICE.getTags(), new Room("B-204"), new Note(VALID_NOTE_BOB)).isFavourite());
+        assertFalse(new Person(ALICE.getName(), ALICE.getPhone(), ALICE.getTags()).isFavourite());
+        assertFalse(new Person(ALICE.getName(), ALICE.getPhone(), ALICE.getTags(), new Room("B-204")).isFavourite());
+        assertFalse(new Person(ALICE.getName(), ALICE.getPhone(), ALICE.getTags(), new Room("B-204"),
+            new Note(VALID_NOTE_BOB)).isFavourite());
     }
 
     @Test
@@ -47,8 +43,6 @@ public class PersonTest {
         assertFalse(original.isFavourite());
         assertEquals(original.getName(), favourite.getName());
         assertEquals(original.getPhone(), favourite.getPhone());
-        assertEquals(original.getEmail(), favourite.getEmail());
-        assertEquals(original.getAddress(), favourite.getAddress());
         assertEquals(original.getRoom(), favourite.getRoom());
         assertEquals(original.getNote(), favourite.getNote());
         assertEquals(List.copyOf(original.getTags()), List.copyOf(favourite.getTags()));
@@ -85,10 +79,9 @@ public class PersonTest {
 
     @Test
     public void constructor_archiveOverloads_preserveRequestedState() {
-        Person withRoom = new Person(ALICE.getName(), ALICE.getPhone(), ALICE.getEmail(),
-                ALICE.getAddress(), ALICE.getTags(), new Room("B-204"), true);
-        Person withNote = new Person(ALICE.getName(), ALICE.getPhone(), ALICE.getEmail(),
-                ALICE.getAddress(), ALICE.getTags(), new Room("B-204"), new Note("Call after six"), true);
+        Person withRoom = new Person(ALICE.getName(), ALICE.getPhone(), ALICE.getTags(), new Room("B-204"), true);
+        Person withNote = new Person(ALICE.getName(), ALICE.getPhone(), ALICE.getTags(), new Room("B-204"),
+            new Note("Call after six"), true);
         assertTrue(withRoom.isArchived());
         assertTrue(withNote.isArchived());
         assertTrue(withRoom.getEmergencyContact().isEmpty());
@@ -135,21 +128,19 @@ public class PersonTest {
         tagsOverLimit.add(new Tag("Staff"));
 
         assertThrows(IllegalArgumentException.class, () -> new Person(JANE.getName(), JANE.getPhone(),
-                JANE.getEmail(), JANE.getAddress(), tagsOverLimit));
+                tagsOverLimit));
     }
 
     @Test
     public void constructor_exactlyTagLimit_success() {
         Set<Tag> tagsAtLimit = createTags(Person.MAX_TAGS);
 
-        Person person = new Person(ALICE.getName(), ALICE.getPhone(), ALICE.getEmail(), ALICE.getAddress(),
-                tagsAtLimit);
+        Person person = new Person(ALICE.getName(), ALICE.getPhone(), tagsAtLimit);
         assertEquals(Person.MAX_TAGS, person.getTags().size());
         assertEquals(tagsAtLimit, person.getTags());
 
         // the constructor that also takes a room has the same limit
-        Person personWithRoom = new Person(ALICE.getName(), ALICE.getPhone(), ALICE.getEmail(),
-                ALICE.getAddress(), tagsAtLimit, ALICE.getRoom());
+        Person personWithRoom = new Person(ALICE.getName(), ALICE.getPhone(), tagsAtLimit, ALICE.getRoom());
         assertEquals(Person.MAX_TAGS, personWithRoom.getTags().size());
     }
 
@@ -158,17 +149,16 @@ public class PersonTest {
         Set<Tag> tagsOverLimit = createTags(Person.MAX_TAGS + 1);
 
         assertThrows(IllegalArgumentException.class, Person.MESSAGE_TAG_LIMIT_REACHED, () -> new Person(
-                ALICE.getName(), ALICE.getPhone(), ALICE.getEmail(), ALICE.getAddress(), tagsOverLimit));
+                ALICE.getName(), ALICE.getPhone(), tagsOverLimit));
         assertThrows(IllegalArgumentException.class, Person.MESSAGE_TAG_LIMIT_REACHED, () -> new Person(
-                ALICE.getName(), ALICE.getPhone(), ALICE.getEmail(), ALICE.getAddress(), tagsOverLimit,
+                ALICE.getName(), ALICE.getPhone(), tagsOverLimit,
                 ALICE.getRoom()));
     }
 
     @Test
     public void constructor_tags_keepsGivenOrder() {
         List<Tag> tagsInGivenOrder = List.of(new Tag("Staff"), new Tag("RA"), new Tag("Block4"));
-        Person person = new Person(ALICE.getName(), ALICE.getPhone(), ALICE.getEmail(), ALICE.getAddress(),
-                new LinkedHashSet<>(tagsInGivenOrder));
+        Person person = new Person(ALICE.getName(), ALICE.getPhone(), new LinkedHashSet<>(tagsInGivenOrder));
 
         assertEquals(tagsInGivenOrder, List.copyOf(person.getTags()));
     }
@@ -185,8 +175,7 @@ public class PersonTest {
         assertFalse(ALICE.isSamePerson(null));
 
         // same name, all other attributes different -> returns true
-        Person editedAlice = new PersonBuilder(ALICE).withPhone(VALID_PHONE_BOB).withEmail(VALID_EMAIL_BOB)
-                .withAddress(VALID_ADDRESS_BOB).withTags(VALID_TAG_HUSBAND).build();
+        Person editedAlice = new PersonBuilder(ALICE).withPhone(VALID_PHONE_BOB).withTags(VALID_TAG_HUSBAND).build();
         assertTrue(ALICE.isSamePerson(editedAlice));
 
         // different name, all other attributes same -> returns false
@@ -227,14 +216,6 @@ public class PersonTest {
 
         // different phone -> returns false
         editedAlice = new PersonBuilder(ALICE).withPhone(VALID_PHONE_BOB).build();
-        assertFalse(ALICE.equals(editedAlice));
-
-        // different email -> returns false
-        editedAlice = new PersonBuilder(ALICE).withEmail(VALID_EMAIL_BOB).build();
-        assertFalse(ALICE.equals(editedAlice));
-
-        // different address -> returns false
-        editedAlice = new PersonBuilder(ALICE).withAddress(VALID_ADDRESS_BOB).build();
         assertFalse(ALICE.equals(editedAlice));
 
         // different tags -> returns false
@@ -281,8 +262,6 @@ public class PersonTest {
         assertEquals(original.getNote(), updated.getNote());
         assertEquals(original.getRoom(), updated.getRoom());
         assertEquals(original.getPhone(), updated.getPhone());
-        assertEquals(original.getEmail(), updated.getEmail());
-        assertEquals(original.getAddress(), updated.getAddress());
         assertEquals(original.getTags(), updated.getTags());
         assertEquals(contact, updated.getEmergencyContact().orElseThrow());
     }
@@ -314,7 +293,7 @@ public class PersonTest {
     @Test
     public void toStringMethod() {
         String expected = Person.class.getCanonicalName() + "{name=" + ALICE.getName() + ", phone=" + ALICE.getPhone()
-                + ", email=" + ALICE.getEmail() + ", address=" + ALICE.getAddress() + ", tags=" + ALICE.getTags() + "}";
+                + ", tags=" + ALICE.getTags() + "}";
         assertEquals(expected, ALICE.toString());
 
         Person aliceWithRoom = new PersonBuilder(ALICE).withRoom("B-204").build();

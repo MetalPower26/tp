@@ -154,7 +154,7 @@ public class NameFuzzyMatchesPredicateTest {
 
         // matches phone, email and address, but not name
         assertFalse(new NameFuzzyMatchesPredicate("12345").test(new PersonBuilder().withName("Alice")
-                .withPhone("12345").withEmail("alice@email.com").withAddress("Main Street").build()));
+                .withPhone("12345").build()));
     }
 
     @Test

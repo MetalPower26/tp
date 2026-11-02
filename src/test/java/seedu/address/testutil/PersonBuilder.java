@@ -4,8 +4,6 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Email;
 import seedu.address.model.person.EmergencyContact;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Note;
@@ -22,15 +20,11 @@ public class PersonBuilder {
 
     public static final String DEFAULT_NAME = "Amy Bee";
     public static final String DEFAULT_PHONE = "85355255";
-    public static final String DEFAULT_EMAIL = "amy@gmail.com";
-    public static final String DEFAULT_ADDRESS = "123, Jurong West Ave 6, #08-111";
     public static final String DEFAULT_ROOM = "";
     public static final String DEFAULT_NOTE = "";
 
     private Name name;
     private Phone phone;
-    private Email email;
-    private Address address;
     private Set<Tag> tags;
     private Room room;
     private Note note;
@@ -44,8 +38,6 @@ public class PersonBuilder {
     public PersonBuilder() {
         name = new Name(DEFAULT_NAME);
         phone = new Phone(DEFAULT_PHONE);
-        email = new Email(DEFAULT_EMAIL);
-        address = new Address(DEFAULT_ADDRESS);
         tags = new LinkedHashSet<>();
         room = new Room(DEFAULT_ROOM);
         note = new Note(DEFAULT_NOTE);
@@ -58,8 +50,6 @@ public class PersonBuilder {
     public PersonBuilder(Person personToCopy) {
         name = personToCopy.getName();
         phone = personToCopy.getPhone();
-        email = personToCopy.getEmail();
-        address = personToCopy.getAddress();
         tags = new LinkedHashSet<>(personToCopy.getTags());
         room = personToCopy.getRoom();
         note = personToCopy.getNote();
@@ -85,26 +75,10 @@ public class PersonBuilder {
     }
 
     /**
-     * Sets the {@code Address} of the {@code Person} that we are building.
-     */
-    public PersonBuilder withAddress(String address) {
-        this.address = new Address(address);
-        return this;
-    }
-
-    /**
      * Sets the {@code Phone} of the {@code Person} that we are building.
      */
     public PersonBuilder withPhone(String phone) {
         this.phone = new Phone(phone);
-        return this;
-    }
-
-    /**
-     * Sets the {@code Email} of the {@code Person} that we are building.
-     */
-    public PersonBuilder withEmail(String email) {
-        this.email = new Email(email);
         return this;
     }
 
@@ -134,7 +108,7 @@ public class PersonBuilder {
 
     /** Builds a contact retaining all editable fields and separately managed statuses. */
     public Person build() {
-        return new Person(name, phone, email, address, tags, room, note, emergencyContact, archive,
+        return new Person(name, phone, tags, room, note, emergencyContact, archive,
                 isFavourite);
     }
 

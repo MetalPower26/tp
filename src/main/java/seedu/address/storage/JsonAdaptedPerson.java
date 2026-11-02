@@ -12,8 +12,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.util.StringUtil;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Email;
 import seedu.address.model.person.EmergencyContact;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Note;
@@ -31,8 +29,6 @@ class JsonAdaptedPerson {
 
     private final String name;
     private final String phone;
-    private final String email;
-    private final String address;
     private final String room;
     private final boolean archive;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
@@ -43,54 +39,52 @@ class JsonAdaptedPerson {
     /**
      * Constructs a {@code JsonAdaptedPerson} with the given person details.
      */
-    public JsonAdaptedPerson(String name, String phone, String email, String address, List<JsonAdaptedTag> tags) {
-        this(name, phone, email, address, tags, null, null);
+    public JsonAdaptedPerson(String name, String phone, List<JsonAdaptedTag> tags) {
+        this(name, phone, tags, null, null);
     }
 
     /** Creates an adapter without a note, emergency contact, or archive state. */
-    public JsonAdaptedPerson(String name, String phone, String email, String address,
+    public JsonAdaptedPerson(String name, String phone,
             List<JsonAdaptedTag> tags, String room) {
-        this(name, phone, email, address, tags, room, null, null, false);
+        this(name, phone, tags, room, null, null, false);
     }
 
     /** Creates an adapter with archive state. */
-    public JsonAdaptedPerson(String name, String phone, String email, String address,
+    public JsonAdaptedPerson(String name, String phone,
             List<JsonAdaptedTag> tags, String room, boolean archive) {
-        this(name, phone, email, address, tags, room, null, null, archive);
+        this(name, phone, tags, room, null, null, archive);
     }
 
     /** Creates an adapter with a note. */
-    public JsonAdaptedPerson(String name, String phone, String email, String address,
+    public JsonAdaptedPerson(String name, String phone,
             List<JsonAdaptedTag> tags, String room, String note) {
-        this(name, phone, email, address, tags, room, note, null, false);
+        this(name, phone, tags, room, note, null, false);
     }
 
     /** Creates an adapter with a note and archive state. */
-    public JsonAdaptedPerson(String name, String phone, String email, String address,
+    public JsonAdaptedPerson(String name, String phone,
             List<JsonAdaptedTag> tags, String room, String note, boolean archive) {
-        this(name, phone, email, address, tags, room, note, null, archive);
+        this(name, phone, tags, room, note, null, archive);
     }
 
     /** Creates an adapter with a note and emergency contact. */
-    public JsonAdaptedPerson(String name, String phone, String email, String address,
+    public JsonAdaptedPerson(String name, String phone,
             List<JsonAdaptedTag> tags, String room, String note,
             JsonAdaptedEmergencyContact emergencyContact) {
-        this(name, phone, email, address, tags, room, note, emergencyContact, false);
+        this(name, phone, tags, room, note, emergencyContact, false);
     }
 
     /** Creates an adapter with emergency details and archive state, defaulting to unfavourited. */
-    public JsonAdaptedPerson(String name, String phone, String email, String address,
+    public JsonAdaptedPerson(String name, String phone,
             List<JsonAdaptedTag> tags, String room, String note,
             JsonAdaptedEmergencyContact emergencyContact, boolean archive) {
-        this(name, phone, email, address, tags, room, note, emergencyContact, archive, false);
+        this(name, phone, tags, room, note, emergencyContact, archive, false);
     }
 
     /** Creates an adapter from JSON; missing status fields default to false. */
     @JsonCreator
     public JsonAdaptedPerson(@JsonProperty("name") String name,
             @JsonProperty("phone") String phone,
-            @JsonProperty("email") String email,
-            @JsonProperty("address") String address,
             @JsonProperty("tags") List<JsonAdaptedTag> tags,
             @JsonProperty("room") String room,
             @JsonProperty("note") String note,
@@ -99,8 +93,6 @@ class JsonAdaptedPerson {
             @JsonProperty("isFavourite") boolean isFavourite) {
         this.name = name;
         this.phone = phone;
-        this.email = email;
-        this.address = address;
         this.room = room;
         this.note = note;
         this.emergencyContact = emergencyContact;
@@ -117,8 +109,6 @@ class JsonAdaptedPerson {
     public JsonAdaptedPerson(Person source) {
         name = source.getName().fullName;
         phone = source.getPhone().value;
-        email = source.getEmail().value;
-        address = source.getAddress().value;
         room = source.getRoom().value;
         archive = source.isArchived();
         isFavourite = source.isFavourite();
@@ -156,22 +146,6 @@ class JsonAdaptedPerson {
         }
         final Phone modelPhone = new Phone(phone);
 
-        if (email == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Email.class.getSimpleName()));
-        }
-        if (!Email.isValidEmail(email)) {
-            throw new IllegalValueException(Email.MESSAGE_CONSTRAINTS);
-        }
-        final Email modelEmail = new Email(email);
-
-        if (address == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Address.class.getSimpleName()));
-        }
-        if (!Address.isValidAddress(address)) {
-            throw new IllegalValueException(Address.MESSAGE_CONSTRAINTS);
-        }
-        final Address modelAddress = new Address(address);
-
         final Set<Tag> modelTags = new LinkedHashSet<>(personTags);
         if (modelTags.size() > Person.MAX_TAGS) {
             throw new IllegalValueException(Person.MESSAGE_TAG_LIMIT_REACHED);
@@ -179,7 +153,7 @@ class JsonAdaptedPerson {
         Optional<EmergencyContact> modelEmergencyContact = emergencyContact == null
                 ? Optional.empty() : Optional.of(emergencyContact.toModelType());
 
-        return new Person(modelName, modelPhone, modelEmail, modelAddress,
+        return new Person(modelName, modelPhone,
                 modelTags, toModelRoom(), toModelNote(), modelEmergencyContact, archive, isFavourite);
     }
 
